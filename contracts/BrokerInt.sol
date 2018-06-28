@@ -39,7 +39,7 @@ contract BrokerInt is MultiOwnable, Destroyable {
 	 * @dev Allows the owner to change the brokerImp.
 	 * @param _brokerImp The brokerImp address
 	 */
-	function changeBroker(address _brokerImp) public onlyOwner {
+	function changeBrokerImp(address _brokerImp) public onlyOwner {
 		emit BrokerImpChanged(brokerImp, _brokerImp);
 		brokerImp = BrokerImp(_brokerImp);
 	}
