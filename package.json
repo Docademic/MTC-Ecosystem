@@ -1,0 +1,14 @@
+{
+  "name": "mtcecosystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "rm -rf build && truffle compile"
+  },
+  "author": "",
+  "license": "ISC"
+}
