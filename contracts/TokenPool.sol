@@ -36,7 +36,7 @@ contract TokenPool is Ownable, Destroyable {
 	constructor(address _token, address _spender) public{
 		require(_token != address(0) && _spender != address(0));
 		token = Token(_token);
-		spender = spender;
+		spender = _spender;
 	}
 	
 	/**
