@@ -2,13 +2,13 @@ pragma solidity ^0.4.21;
 
 import "./ownership/MultiOwnable.sol";
 import "./math/SafeMath.sol";
-import "./util/Destroyable.sol";
+import "./util/DestroyableMultiOwner.sol";
 
 interface BrokerImp {
 	function reward(address _beneficiary, uint256 _value) external returns (bool);
 }
 
-contract BrokerInt is MultiOwnable, Destroyable {
+contract BrokerInt is MultiOwnable, DestroyableMultiOwner {
 	using SafeMath for uint256;
 	
 	BrokerImp public brokerImp;

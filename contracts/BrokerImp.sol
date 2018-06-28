@@ -2,13 +2,13 @@ pragma solidity ^0.4.21;
 
 import "./ownership/MultiOwnable.sol";
 import "./math/SafeMath.sol";
-import "./util/Destroyable.sol";
+import "./util/DestroyableMultiOwner.sol";
 
 interface Token {
 	function transferFrom(address _from, address _to, uint256 _value) external returns (bool);
 }
 
-contract BrokerImp is MultiOwnable, Destroyable {
+contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 	using SafeMath for uint256;
 	
 	Token public token;
