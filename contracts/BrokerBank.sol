@@ -59,10 +59,9 @@ contract BrokerBank is Ownable, Destroyable {
 	 */
 	function withdraw() public onlyOwner {
 		uint256 balance = token.balanceOf(address(this));
-		uint256 hundred = uint256(100);
-		uint256 beneficiaryPart = hundred.sub(commission);
-		uint256 beneficiaryWithdraw = balance.mul(beneficiaryPart.div(hundred));
+		uint256 hundred = 100;
 		uint256 brokerWithdraw = balance.mul(commission.div(hundred));
+		uint256 beneficiaryWithdraw = balance.sub(brokerWithdraw);
 		token.transfer(beneficiary, beneficiaryWithdraw);
 		token.transfer(broker, brokerWithdraw);
 		emit Withdrawn(balance);
