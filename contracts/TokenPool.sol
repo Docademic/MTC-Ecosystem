@@ -24,9 +24,14 @@ contract TokenPool is Ownable, Destroyable {
 	Token public token;
 	address public spender;
 	
+	event AllowanceChanged(uint256 _previousAllowance, uint256 _allowed);
+	event SpenderChanged(address _previousSpender, address _spender);
+	
+	
 	/**
 	 * @dev Constructor.
 	 * @param _token The token address
+	 * @param _spender The spender address
 	 */
 	constructor(address _token, address _spender) public{
 		require(_token != address(0) && _spender != address(0));
@@ -46,6 +51,7 @@ contract TokenPool is Ownable, Destroyable {
 	 * @dev Allows the owner to set up the allowance to the spender.
 	 */
 	function setUpAllowance() public onlyOwner {
+		emit AllowanceChanged(token.allowance(address(this), spender), token.balanceOf(address(this)));
 		token.approve(spender, token.balanceOf(address(this)));
 	}
 	
@@ -57,6 +63,7 @@ contract TokenPool is Ownable, Destroyable {
 		uint256 allowance = token.allowance(address(this), spender);
 		uint256 difference = balance.sub(allowance);
 		token.increaseApproval(spender, difference);
+		emit AllowanceChanged(allowance, allowance.add(difference));
 	}
 	
 	/**
@@ -65,6 +72,18 @@ contract TokenPool is Ownable, Destroyable {
 	function destroy() public onlyOwner {
 		token.transfer(owner, token.balanceOf(address(this)));
 		selfdestruct(owner);
+	}
+	
+	/**
+	 * @dev Allows the owner to change the spender.
+	 * @param _spender The new spender address
+	 */
+	function changeSpender(address _spender) public onlyOwner {
+		require(_spender != address(0));
+		emit SpenderChanged(spender, _spender);
+		token.approve(spender, 0);
+		spender = _spender;
+		setUpAllowance();
 	}
 	
 }
