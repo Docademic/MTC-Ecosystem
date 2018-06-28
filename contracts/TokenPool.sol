@@ -48,6 +48,14 @@ contract TokenPool is Ownable, Destroyable {
 	}
 	
 	/**
+	 * @dev Get the token allowance of the contract to the spender.
+	 * @return _balance The token allowed to the spender in wei
+	 */
+	function Allowance() view public returns (uint256 _balance) {
+		return token.allowance(address(this), spender);
+	}
+	
+	/**
 	 * @dev Allows the owner to set up the allowance to the spender.
 	 */
 	function setUpAllowance() public onlyOwner {
