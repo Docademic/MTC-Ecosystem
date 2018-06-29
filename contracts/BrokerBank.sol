@@ -33,7 +33,7 @@ contract BrokerBank is Ownable, Destroyable {
 	constructor (address _token, uint256 _commission, address _broker, address _beneficiary) public {
 		require(_token != address(0));
 		token = Token(_token);
-		commission = _commission;
+		commission = _commission * 1 ether;
 		broker = _broker;
 		beneficiary = _beneficiary;
 	}
@@ -59,7 +59,7 @@ contract BrokerBank is Ownable, Destroyable {
 	 */
 	function withdraw() public onlyOwner {
 		uint256 balance = token.balanceOf(address(this));
-		uint256 hundred = 100;
+		uint256 hundred = 100 * 1 ether;
 		uint256 brokerWithdraw = balance.mul(commission.div(hundred));
 		uint256 beneficiaryWithdraw = balance.sub(brokerWithdraw);
 		token.transfer(beneficiary, beneficiaryWithdraw);
@@ -73,7 +73,7 @@ contract BrokerBank is Ownable, Destroyable {
 	 */
 	function changeCommission(uint256 _commission) public onlyOwner {
 		emit CommissionChanged(commission, _commission);
-		commission = _commission;
+		commission = _commission * 1 ether;
 	}
 	
 	/**
