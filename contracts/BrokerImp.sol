@@ -40,10 +40,10 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 	 * @param _beneficiary the beneficiary address
 	 * @param _value the tokens reward in wei
 	 */
-	function reward(address _beneficiary, uint256 _value/*7.2*/) public onlyowner returns (bool) {
-		/*uint256 hundred = uint256(100); //100
-		uint256 beneficiaryPart = hundred.sub(commission); //20
-		uint256 total = _value.div(beneficiaryPart.div(hundred));
+	function reward(address _beneficiary, uint256 _value) public onlyowner returns (bool) {
+		/*uint256 hundred = uint256(100);
+		uint256 beneficiaryPart = hundred.sub(commission);
+		uint256 total = (_value.div(beneficiaryPart)).mul(hundred);
 		uint256 brokerCommission = total.sub(_value);*/
 		return (
 		token.transferFrom(pool, _beneficiary, _value) &&
