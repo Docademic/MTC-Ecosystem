@@ -8,7 +8,7 @@ interface Token {
 	function transferFrom(address _from, address _to, uint256 _value) external returns (bool);
 }
 
-contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
+contract BrokerImp is DestroyableMultiOwner {
 	using SafeMath for uint256;
 	
 	Token public token;
@@ -40,8 +40,11 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 		ethReward = _ethReward;
 	}
 	
-	function() payable public {
-	
+	/**
+	 * @dev Allows to fund the contract with ETH.
+	 */
+	function fund(uint256 amount) payable public {
+		require(msg.value == amount);
 	}
 	
 	/**
