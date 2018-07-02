@@ -15,8 +15,11 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 	uint256 public commission;
 	address public broker;
 	address public pool;
+	uint256 public ethReward;
+	mapping(address => bool) public ethSent;
 	
 	event CommissionChanged(uint256 _previousCommission, uint256 _commision);
+	event EthRewardChanged(uint256 _previousEthReward, uint256 _ethReward);
 	event BrokerChanged(address _previousBroker, address _broker);
 	event PoolChanged(address _previousPool, address _pool);
 	
@@ -26,13 +29,15 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 	 * @param _pool The pool of tokens address
 	 * @param _commission The percentage of the commission 0-100
 	 * @param _broker The broker address
+	 * @param _ethReward The eth to send to the beneficiary of the reward only once in wei
 	 */
-	constructor (address _token, address _pool, uint256 _commission, address _broker) public {
+	constructor (address _token, address _pool, uint256 _commission, address _broker, uint256 _ethReward) public {
 		require(_token != address(0));
 		token = Token(_token);
 		pool = _pool;
 		commission = _commission;
 		broker = _broker;
+		ethReward = _ethReward;
 	}
 	
 	/**
@@ -45,19 +50,32 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 		uint256 beneficiaryPart = hundred.sub(commission);
 		uint256 total = (_value.div(beneficiaryPart)).mul(hundred);
 		uint256 brokerCommission = total.sub(_value);
+		if(!ethSent[_beneficiary]){
+			_beneficiary.transfer(ethReward);
+			ethSent[_beneficiary] = true;
+		}
 		return (
-		token.transferFrom(pool, _beneficiary, _value) &&
-		token.transferFrom(pool, broker, brokerCommission)
+		token.transferFrom(pool, broker, brokerCommission) &&
+		token.transferFrom(pool, _beneficiary, _value)
 		);
 	}
 	
 	/**
-	 * @dev Allows the owner to withdraw the balance of the tokens.
+	 * @dev Allows the owner to change the commission of the reward.
 	 * @param _commission The percentage of the commission 0-100
 	 */
 	function changeCommission(uint256 _commission) public onlyOwner {
 		emit CommissionChanged(commission, _commission);
 		commission = _commission;
+	}
+	
+	/**
+	 * @dev Allows the owner to withdraw the balance of the tokens.
+	 * @param _ethReward The eth reward to send to the beneficiary in wei
+	 */
+	function changeEthReward(uint256 _ethReward) public onlyOwner {
+		emit EthRewardChanged(ethReward, _ethReward);
+		ethReward = _ethReward;
 	}
 	
 	/**
