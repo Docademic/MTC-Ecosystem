@@ -40,6 +40,10 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 		ethReward = _ethReward;
 	}
 	
+	function() payable public {
+	
+	}
+	
 	/**
 	 * @dev Allows the owner make a reward.
 	 * @param _beneficiary the beneficiary address
@@ -50,7 +54,7 @@ contract BrokerImp is MultiOwnable, DestroyableMultiOwner {
 		uint256 beneficiaryPart = hundred.sub(commission);
 		uint256 total = (_value.div(beneficiaryPart)).mul(hundred);
 		uint256 brokerCommission = total.sub(_value);
-		if(!ethSent[_beneficiary]){
+		if (!ethSent[_beneficiary]) {
 			_beneficiary.transfer(ethReward);
 			ethSent[_beneficiary] = true;
 		}
